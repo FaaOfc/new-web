@@ -1,24 +1,24 @@
 "use client";
 
-import { Heart, Github, ExternalLink, Server, Code2, Zap, Globe, Library } from "lucide-react";
+import { Heart, Github, ExternalLink, Server, Code2, Zap, Globe } from "lucide-react";
 import { siteConfig } from "@/lib/config";
 
 const apiProviders = [
   {
-    name: "Scrapr",
+    name: "@coflyn/scrapr",
     url: "https://github.com/coflyn/scrapr",
     description:
-      "Library scraper universal yang menjadi mesin semua fitur downloader TaoSite — TikTok, Instagram, YouTube, Spotify, anime, komik, dan resolver link, semua berjalan langsung di server.",
-    icon: Library,
-    color: "#7c3aed",
+      "Library scraper utama TaoSite — 54 engine downloader untuk TikTok, Instagram, YouTube, Spotify, anime, komik, hingga resolver shortlink. Semua engine berjalan langsung di server TaoSite.",
+    icon: Code2,
+    color: "#0d9488",
   },
   {
-    name: "Sansekai API",
-    url: "https://api.sansekai.my.id",
+    name: "GitHub",
+    url: "https://github.com",
     description:
-      "API publik untuk data anime (daftar, detail, dan episode terbaru). Menyediakan katalog anime lengkap tanpa autentikasi.",
+      "Backend gratis untuk fitur CDN (penyimpanan file di repo) dan ShortURL (mapping URL di Gist). Tanpa biaya, tanpa database berbayar.",
     icon: Globe,
-    color: "#0d9488",
+    color: "#7c3aed",
   },
 ];
 
@@ -30,8 +30,8 @@ const techStack = [
     color: "#000000",
   },
   {
-    name: "Prisma + PostgreSQL",
-    description: "ORM dan database untuk menyimpan data user dan autentikasi akun. Digunakan untuk fitur login dan persistensi data pengguna.",
+    name: "GitHub + Vercel",
+    description: "Infrastruktur gratis TaoSite: GitHub sebagai storage CDN dan database short URL, Vercel sebagai hosting Next.js tanpa biaya.",
     icon: Server,
     color: "#3b82f6",
   },
@@ -49,8 +49,8 @@ const contributors = [
     contribution: "Ide, desain, referensi, fitur ( CDN & Short url ).",
   },
   {
-    name: "Faa - API",
-    contribution: "Penyedia Layanan API yang digunakan lebih dari 50% dalam proyek ini.",
+    name: "Coflyn (Scrapr)",
+    contribution: "Pembuat library @coflyn/scrapr — 54 engine downloader yang menjadi jantung fitur unduh TaoSite.",
   },
   {
     name: "Komunitas Open Source",

@@ -14,7 +14,7 @@ const sections = [
   {
     title: "2. Deskripsi Layanan",
     content:
-      `TaoSite adalah platform web multi-fungsi yang menyediakan tools gratis termasuk namun tidak terbatas pada: CDN file hosting, URL shortener, dan social media downloader untuk 16+ platform (TikTok, Instagram, Facebook, YouTube, Spotify, dan lainnya). Semua fitur disediakan "sebagaimana adanya" (as-is) tanpa jaminan apapun. Kami berhak mengubah, membatasi, atau menghentikan fitur layanan kapan saja tanpa pemberitahuan terlebih dahulu.`,
+      `TaoSite adalah platform web multi-fungsi yang menyediakan tools gratis termasuk namun tidak terbatas pada: CDN file hosting, URL shortener, dan multi-platform downloader (TikTok, Instagram, Facebook, YouTube, Spotify, anime, komik, resolver link, dan lainnya) dengan 54 engine. Semua fitur disediakan "sebagaimana adanya" (as-is) tanpa jaminan apapun. Kami berhak mengubah, membatasi, atau menghentikan fitur layanan kapan saja tanpa pemberitahuan terlebih dahulu.`,
     icon: FileText,
     color: "#3b82f6",
   },
@@ -28,14 +28,14 @@ const sections = [
   {
     title: "4. Penggunaan yang Dilarang",
     content:
-      "Berikut adalah daftar aktivitas yang secara tegas dilarang saat menggunakan TaoSite: Mengupload konten yang melanggar hukum Indonesia atau yurisdiksi yang berlaku. Melakukan brute-force, DDoS, atau serangan lain terhadap server atau API yang digunakan. Menggunakan downloader untuk mengunduh konten yang dilindungi hak cipta tanpa izin pemilik. Membuat akun otomatis atau bot yang mengakses layanan secara massal.",
+      "Berikut adalah daftar aktivitas yang secara tegas dilarang saat menggunakan TaoSite: Mengupload konten yang melanggar hukum Indonesia atau yurisdiksi yang berlaku. Melakukan spamming request ke API downloader sehingga merusak ketersediaan layanan. Melakukan brute-force, DDoS, atau serangan lain terhadap server atau API yang digunakan. Menggunakan downloader untuk mengunduh konten yang dilindungi hak cipta tanpa izin pemilik. Membuat bot yang mengakses layanan secara massal tanpa izin tertulis.",
     icon: Ban,
     color: "#e11d48",
   },
   {
     title: "5. Konten Pengguna",
     content:
-      "Untuk fitur CDN hosting, kamu bertanggung jawab penuh terhadap konten yang diupload. Kami tidak memoderasi konten secara aktif, namun berhak menghapus file yang melanggar ketentuan ini jika ditemukan. Untuk fitur downloader, hasil unduhan hanya untuk penggunaan pribadi — kamu bertanggung jawab memastikan penggunaannya tidak melanggar hak cipta pihak ketiga.",
+      "Untuk fitur CDN hosting, kamu bertanggung jawab penuh terhadap konten yang diupload. Kami tidak memoderasi konten secara aktif, namun berhak menghapus file yang melanggar ketentuan ini jika ditemukan. Untuk hasil downloader, tautan media yang dihasilkan berasal dari platform sumbernya — kamu bertanggung jawab atas cara penggunaannya. Kami tidak menjamin keakuratan, kesesuaian, atau keamanan dari tautan yang dihasilkan.",
     icon: AlertTriangle,
     color: "#f59e0b",
   },

@@ -1,57 +1,48 @@
-import path from "path";
-import { createRequire } from "module";
+// ============================================================
+// SCRAPER ENGINE LOADER — TaoSite (server-only)
+// ------------------------------------------------------------
+// Semua engine @coflyn/scrapr ter-bundle statis via engine-map
+// (di-generate scripts/gen_engine_map.py) — kompatibel Turbopack
+// dan aman untuk serverless Vercel tanpa file-tracing tambahan.
+// ============================================================
 
-// PENTING: pemuatan module scrapr dilakukan lewat indirection (new Function)
-// agar bundler (Turbopack/webpack) TIDAK mencoba menganalisis & meng-bundle
-// file vendor secara statis — require dijalankan murni di runtime Node.js.
-const nodeRequire = createRequire(import.meta.url);
-const dynamicRequire = new Function(
-  "req",
-  "p",
-  "return req(p);"
-) as (req: NodeRequire, p: string) => unknown;
+import { getEngineModule } from "@/lib/engine-map";
 
-type ScraprFn = (...args: unknown[]) => Promise<unknown>;
-
-interface ScraprModule {
-  [category: string]: Record<string, ScraprFn> | ScraprFn;
-}
-
-let cached: ScraprModule | null = null;
-
-/**
- * Load library scrapr yang di-vendor di /vendor/scrapr.
- * Menggunakan createRequire + path runtime agar TIDAK di-bundle oleh Next.js
- * (menghindari error bundling untuk optional dependency seperti puppeteer/playwright).
- */
-export function loadScrapr(): ScraprModule {
-  if (cached) return cached;
-  const entry = path.join(process.cwd(), "vendor", "scrapr", "index.js");
-  cached = dynamicRequire(nodeRequire, entry) as ScraprModule;
-  return cached;
+export interface ScraprRawResult {
+  status?: boolean;
+  message?: string;
+  result?: unknown;
 }
 
 /**
- * Panggil satu engine scrapr dengan timeout.
+ * Jalankan engine scrapr.
+ * @param categoryDir  Nama folder kategori di vendor/scrapr/lib (mis. "instagram")
+ * @param engineName   Nama folder engine (mis. "snapsave")
+ * @param url          URL target yang akan di-scrape
+ * @param options      Opsi tambahan (mis. { format: "mp3" } untuk ytmp3)
  */
-export async function runEngine(
-  libKey: string,
-  engineKey: string,
+export async function runScraprEngine(
+  categoryDir: string,
+  engineName: string,
   url: string,
-  extraArgs: unknown[] = [],
-  timeoutMs = 90_000
-): Promise<unknown> {
-  const scrapr = loadScrapr();
-  const cat = scrapr[libKey] as Record<string, ScraprFn> | undefined;
-  if (!cat) throw new Error(`Kategori "${libKey}" tidak ada di scrapr.`);
-  const fn = cat[engineKey];
-  if (typeof fn !== "function")
-    throw new Error(`Engine "${engineKey}" tidak ada di scrapr/${libKey}.`);
+  options?: Record<string, unknown>
+): Promise<ScraprRawResult> {
+  const mod = getEngineModule(`${categoryDir}/${engineName}`);
 
-  return Promise.race([
-    fn(url, ...extraArgs),
-    new Promise((_, reject) =>
-      setTimeout(() => reject(new Error("Timeout — engine terlalu lama merespons.")), timeoutMs)
-    ),
-  ]);
+  if (!mod) {
+    throw new Error(`Engine tidak ditemukan: ${categoryDir}/${engineName}`);
+  }
+
+  const scrape = (mod as { scrape?: unknown }).scrape;
+
+  if (typeof scrape !== "function") {
+    throw new Error(`Engine ${categoryDir}/${engineName} tidak valid (scrape tidak ada).`);
+  }
+
+  const result = await (scrape as (
+    url: string,
+    options?: Record<string, unknown>
+  ) => Promise<ScraprRawResult> | ScraprRawResult)(url, options ?? {});
+
+  return result;
 }

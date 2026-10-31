@@ -12,13 +12,11 @@ import {
   FileText,
   Users,
   Sparkles,
-  Smartphone,
 } from "lucide-react";
 import { siteConfig } from "@/lib/config";
 
 const quickLinks = [
   { href: "/about", label: "About Us", icon: Users },
-  { href: "/downloads", label: "Unduh Aplikasi", icon: Smartphone },
   { href: "/thanks", label: "Thanks To", icon: Heart },
   { href: "/tos", label: "Terms of Service", icon: FileText },
   { href: "/credits", label: "Credits", icon: Sparkles },
@@ -71,7 +69,7 @@ function SocialIcon({ label }: { label: string }) {
   }
 }
 
-// Pages where footer is hidden (full-height interfaces)
+// Halaman tanpa footer (belum ada)
 const FOOTLESS_PAGES: string[] = [];
 
 export default function Footer() {
@@ -101,8 +99,8 @@ export default function Footer() {
               className="font-mono text-xs leading-relaxed"
               style={{ color: "var(--neo-muted-text)" }}
             >
-              {siteConfig.tagline}. Host files, shorten URLs, dan unduh media
-              dari 16+ platform — all in one place.
+              {siteConfig.tagline}. Host files, shorten URLs, unduh media
+              dari 16 platform — all in one place.
             </p>
           </div>
 

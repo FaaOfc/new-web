@@ -27,13 +27,22 @@ const credits = [
     ],
   },
   {
-    category: "Database & Auth",
+    category: "Scraper Engine",
     icon: Box,
     color: "#3b82f6",
     items: [
-      { name: "Prisma 6", url: "https://prisma.io", desc: "ORM generasi berikutnya untuk Node.js dan TypeScript" },
-      { name: "PostgreSQL", url: "https://postgresql.org", desc: "Relational database yang powerful dan open-source" },
-      { name: "bcryptjs", url: "https://github.com/dcodeIO/bcrypt.js", desc: "Library hashing password yang aman menggunakan algoritma bcrypt" },
+      { name: "@coflyn/scrapr", url: "https://github.com/coflyn/scrapr", desc: "Universal media extractor & link resolver — 54 engine downloader TikTok, Instagram, YouTube, dan lainnya" },
+      { name: "Axios", url: "https://axios-http.com", desc: "HTTP client berbasis Promise untuk mengambil data dari berbagai sumber" },
+      { name: "Cheerio", url: "https://cheerio.js.org", desc: "Parsing HTML yang cepat dan ringan — jQuery untuk server" },
+    ],
+  },
+  {
+    category: "Infrastruktur",
+    icon: Box,
+    color: "#8b5cf6",
+    items: [
+      { name: "GitHub", url: "https://github.com", desc: "Backend gratis untuk CDN (repo) dan database short URL (gist)" },
+      { name: "Vercel", url: "https://vercel.com", desc: "Hosting Next.js tanpa biaya dengan deploy otomatis" },
     ],
   },
 ];
@@ -103,7 +112,8 @@ export default function CreditsPage() {
       <div className="neo-card p-5 mt-8 text-center">
         <p className="font-mono text-sm" style={{ color: "var(--neo-muted-text)" }}>
           Taosite tidak akan ada tanpa komunitas open-source. Terima kasih kepada
-          semua maintainer dan kontributor library di atas!
+          <a href="https://github.com/coflyn/scrapr" target="_blank" rel="noopener noreferrer" className="text-emerald-500 hover:underline"> @coflyn/scrapr </a>
+          dan semua maintainer library di atas!
         </p>
         <div className="flex justify-center gap-2 mt-3">
           <a

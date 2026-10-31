@@ -17,9 +17,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "TaoSite — CDN & ShortURL & Downloader",
+  title: "TaoSite — CDN · ShortURL · Multi-Platform Downloader",
   description:
-    "Super-efficient multifunction web app. Free CDN hosting, URL shortener, dan downloader untuk 16+ platform — TikTok, Instagram, YouTube, dan lainnya.",
+    "Super-efficient multifunction web app. Free CDN hosting, URL shortener, dan 54 engine downloader multi-platform — tanpa login, gratis selamanya.",
 };
 
 export default function RootLayout({

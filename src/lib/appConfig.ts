@@ -22,7 +22,7 @@ export interface AppDownload {
    * Kosongkan ("") bila belum ada → tombol nonaktif.
    */
   url: string;
-  /** Nama ikon lucide yang dipakai di kartu */
+  /** Ikon kartu */
   icon: "smartphone" | "monitor" | "apple" | "terminal";
   /** true = kartu ditandai "Rekomendasi" */
   featured?: boolean;
@@ -32,10 +32,11 @@ export interface AppDownload {
 
 export const appInfo = {
   appName: "TaoSite App",
-  tagline:
-    "Akses semua fitur TaoSite langsung dari HP — downloader, CDN, dan short URL dalam satu aplikasi.",
+  tagline: "TaoSite dalam genggaman — downloader, CDN & short URL langsung dari HP.",
   latestVersion: "1.0.0",
-  updatedAt: "2026-10-30",
+  lastUpdated: "2026-10-30",
+  /** Link unduhan utama (dipakai tombol besar di hero). Kosongkan bila belum ada. */
+  primaryUrl: "",
 };
 
 export const appDownloads: AppDownload[] = [
@@ -43,9 +44,8 @@ export const appDownloads: AppDownload[] = [
     id: "android",
     platform: "Android",
     version: "1.0.0",
-    size: "~25 MB",
+    size: "± 24 MB",
     requirements: "Android 8.0+",
-    // TODO: taruh link APK di sini, contoh: "/app/taosite-1.0.0.apk"
     url: "",
     icon: "smartphone",
     featured: true,
@@ -55,32 +55,20 @@ export const appDownloads: AppDownload[] = [
     id: "windows",
     platform: "Windows",
     version: "1.0.0",
-    size: "~60 MB",
+    size: "± 64 MB",
     requirements: "Windows 10/11 64-bit",
-    // TODO: taruh link installer .exe di sini
     url: "",
     icon: "monitor",
-    note: "Installer offline untuk Windows 10 dan 11.",
+    note: "Installer .exe untuk PC dan laptop.",
   },
   {
-    id: "macos",
-    platform: "macOS",
-    version: "1.0.0",
-    size: "~70 MB",
-    requirements: "macOS 12+",
-    // TODO: taruh link .dmg di sini
+    id: "ios",
+    platform: "iOS",
+    version: "-",
+    size: "-",
+    requirements: "iOS 15+",
     url: "",
     icon: "apple",
-  },
-  {
-    id: "linux",
-    platform: "Linux",
-    version: "1.0.0",
-    size: "~55 MB",
-    requirements: "Ubuntu 20.04+ / Debian",
-    // TODO: taruh link .deb atau .AppImage di sini
-    url: "",
-    icon: "terminal",
-    note: "Tersedia dalam format .deb dan .AppImage.",
+    note: "Segera hadir di App Store.",
   },
 ];

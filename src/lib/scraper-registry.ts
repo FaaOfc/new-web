@@ -1,332 +1,273 @@
 // ============================================================
-// Registry Scraper — TaoSite
-// Semua engine diambil dari library @coflyn/scrapr (vendor/scrapr).
-// Kategori yang dikecualikan: bandcamp, applemusic, bilibili, rednote.
+// SCRAPER REGISTRY — TaoSite
+// ------------------------------------------------------------
+// Sumber engine: @coflyn/scrapr (vendored di /vendor/scrapr)
+// Kategori dikecualikan sesuai permintaan: bandcamp,
+// applemusic, bilibili, rednote.
+// Slug kategori dipakai sebagai path URL situs:
+//   /<kategori>/<engine>  contoh: /igdl/snapsave
+// API: /api/dl/<kategori>/<engine>?url=<url>
 // ============================================================
 
-export interface EngineParam {
-  name: string;
-  values: string[];
-  default: string;
-}
-
-export interface EngineDef {
-  /** key module di dalam kategori scrapr, contoh: scrapr.instagram.snapsave */
-  key: string;
-  /** label tampil di UI */
-  label: string;
-  /** catatan singkat engine (opsional) */
-  note?: string;
-  /** parameter tambahan (mis. format mp4/mp3) */
-  params?: EngineParam[];
-}
-
-export interface CategoryDef {
-  /** slug URL, contoh /igdl/snapsave */
+export interface ScraprEngine {
+  /** Slug engine untuk URL, contoh: "snapsave" */
   slug: string;
-  /** nama folder di scrapr/lib */
-  libKey: string;
-  label: string;
-  subtitle: string;
-  description: string;
-  /** warna aksen kategori (hex) */
-  color: string;
-  /** nama ikon lucide-react */
-  icon: string;
-  /** placeholder input URL */
-  placeholder: string;
-  /** contoh URL untuk tombol "Coba contoh" */
-  example?: string;
-  /** engine default jika user buka /<slug> tanpa sub */
-  defaultEngine: string;
-  engines: EngineDef[];
+  /** Nama folder engine di vendor/scrapr/lib/<kategori>/ */
+  name: string;
+  /** Deskripsi singkat engine (id) */
+  desc: string;
 }
 
-export const categories: CategoryDef[] = [
+export interface ScraprCategory {
+  /** Slug kategori untuk URL, contoh: "igdl" */
+  slug: string;
+  /** Nama folder kategori di vendor/scrapr/lib/ */
+  dir: string;
+  label: string;
+  /** Deskripsi singkat kategori (id) */
+  desc: string;
+  /** Nama ikon lucide-react (di-map di komponen) */
+  icon: string;
+  /** Warna aksen kategori (hex) */
+  color: string;
+  engines: ScraprEngine[];
+}
+
+export const scraprCategories: ScraprCategory[] = [
   {
     slug: "ttdl",
-    libKey: "tiktok",
+    dir: "tiktok",
     label: "TikTok",
-    subtitle: "Downloader TikTok",
-    description:
-      "Unduh video TikTok tanpa watermark, photo slide, dan audio MP3. Pilih engine di bawah jika satu engine sedang bermasalah.",
+    desc: "Video TikTok tanpa watermark, audio MP3, photo slide & carousel.",
+    icon: "music",
     color: "#0d9488",
-    icon: "Music2",
-    placeholder: "https://www.tiktok.com/@username/video/xxxxx",
-    example: "https://www.tiktok.com/@tiktok/video/7106594312292453675",
-    defaultEngine: "tikdownloader",
     engines: [
-      { key: "tikdownloader", label: "TikDownloader" },
-      { key: "snaptik", label: "SnapTik" },
-      { key: "ssstik", label: "SSSTik" },
-      { key: "savetik", label: "SaveTik", note: "Butuh Chrome (puppeteer)" },
-      { key: "tiktokio", label: "TikTokIO" },
+      { slug: "tikdownloader", name: "tikdownloader", desc: "Download video TikTok HD tanpa watermark" },
+      { slug: "snaptik", name: "snaptik", desc: "Server Snaptik — video HD & MP3" },
+      { slug: "ssstik", name: "ssstik", desc: "Server SSSTik — video, audio & slideshow" },
+      { slug: "savetik", name: "savetik", desc: "Server Savetik — video & MP3" },
+      { slug: "tiktokio", name: "tiktokio", desc: "Server TikTokIO — video tanpa watermark" },
     ],
   },
   {
     slug: "igdl",
-    libKey: "instagram",
+    dir: "instagram",
     label: "Instagram",
-    subtitle: "Downloader Instagram",
-    description:
-      "Unduh Reels, video post, foto, dan carousel Instagram. Mendukung banyak engine — ganti via tab di bawah.",
+    desc: "Reels, post video, foto single & carousel Instagram.",
+    icon: "camera",
     color: "#be123c",
-    icon: "Camera",
-    placeholder: "https://www.instagram.com/reel/xxxxx",
-    defaultEngine: "snapsave",
     engines: [
-      { key: "snapsave", label: "SnapSave" },
-      { key: "snapinsta", label: "SnapInsta", note: "Butuh Chrome (playwright)" },
-      { key: "indown", label: "InDown" },
-      { key: "direct", label: "Direct" },
+      { slug: "snapsave", name: "snapsave", desc: "Server SnapSave — reels, video & carousel" },
+      { slug: "snapinsta", name: "snapinsta", desc: "Server SnapInsta — reels & post" },
+      { slug: "indown", name: "indown", desc: "Server InDown — video & foto" },
+      { slug: "direct", name: "direct", desc: "Ekstraksi langsung tanpa server pihak ketiga" },
     ],
   },
   {
     slug: "fbdl",
-    libKey: "facebook",
+    dir: "facebook",
     label: "Facebook",
-    subtitle: "Downloader Facebook",
-    description:
-      "Unduh video Facebook dengan pilihan kualitas SD atau HD langsung dari link post/reel.",
+    desc: "Video Facebook kualitas SD & HD.",
+    icon: "facebook",
     color: "#2563eb",
-    icon: "Monitor",
-    placeholder: "https://www.facebook.com/watch?v=xxxxx",
-    defaultEngine: "snapsave",
     engines: [
-      { key: "snapsave", label: "SnapSave" },
-      { key: "fdown", label: "FDown", note: "Butuh Chrome (puppeteer)" },
+      { slug: "snapsave", name: "snapsave", desc: "Server SnapSave — video SD & HD" },
+      { slug: "fdown", name: "fdown", desc: "Server FDown — video SD & HD" },
     ],
   },
   {
     slug: "twdl",
-    libKey: "twitter",
+    dir: "twitter",
     label: "Twitter / X",
-    subtitle: "Downloader Twitter / X",
-    description:
-      "Unduh video & gambar dari tweet. Paste URL tweet yang ingin diunduh.",
-    color: "#64748b",
-    icon: "Twitter",
-    placeholder: "https://x.com/username/status/xxxxx",
-    defaultEngine: "savetwt",
+    desc: "Video & gambar dari Twitter / X.",
+    icon: "twitter",
+    color: "#111827",
     engines: [
-      { key: "savetwt", label: "SaveTWT" },
-      { key: "direct", label: "Direct" },
-      { key: "tvd", label: "TVD" },
-      { key: "tweeload", label: "Tweeload" },
+      { slug: "savetwt", name: "savetwt", desc: "Server SaveTwt — video & gambar" },
+      { slug: "direct", name: "direct", desc: "Ekstraksi langsung dari halaman tweet" },
+      { slug: "tvd", name: "tvd", desc: "Server TVD — video Twitter" },
+      { slug: "tweeload", name: "tweeload", desc: "Server Tweeload — video & gambar" },
     ],
   },
   {
     slug: "ytdl",
-    libKey: "youtube",
+    dir: "youtube",
     label: "YouTube",
-    subtitle: "Downloader YouTube",
-    description:
-      "Unduh video YouTube (MP4) atau konversi ke audio (MP3), serta seluruh video dalam sebuah playlist.",
+    desc: "Video & audio YouTube — MP4, MP3, sampai playlist.",
+    icon: "youtube",
     color: "#dc2626",
-    icon: "Youtube",
-    placeholder: "https://www.youtube.com/watch?v=xxxxx",
-    defaultEngine: "ytmp3gg",
     engines: [
-      { key: "ytmp3gg", label: "YTMP3 GG" },
-      {
-        key: "ytmp3",
-        label: "YTMP3",
-        params: [
-          {
-            name: "format",
-            values: ["mp4", "mp3"],
-            default: "mp4",
-          },
-        ],
-      },
-      { key: "playlist", label: "Playlist" },
+      { slug: "ytmp3gg", name: "ytmp3gg", desc: "Server YTMP3GG — video & audio" },
+      { slug: "ytmp3", name: "ytmp3", desc: "Konversi YouTube ke MP4 / MP3 (pilih format)" },
+      { slug: "playlist", name: "playlist", desc: "Ambil seluruh item dari playlist YouTube" },
     ],
   },
   {
     slug: "pindl",
-    libKey: "pinterest",
+    dir: "pinterest",
     label: "Pinterest",
-    subtitle: "Downloader Pinterest",
-    description: "Unduh gambar & video pin Pinterest dalam kualitas asli.",
-    color: "#e11d48",
-    icon: "Pin",
-    placeholder: "https://id.pinterest.com/pin/xxxxx",
-    defaultEngine: "pindown",
+    desc: "Gambar & video Pinterest kualitas asli.",
+    icon: "image",
+    color: "#e60023",
     engines: [
-      { key: "pindown", label: "PinDown" },
-      { key: "direct", label: "Direct" },
+      { slug: "pindown", name: "pindown", desc: "Server PinDown — gambar & video" },
+      { slug: "direct", name: "direct", desc: "Ekstraksi langsung tanpa server pihak ketiga" },
     ],
   },
   {
     slug: "threaddl",
-    libKey: "threads",
+    dir: "threads",
     label: "Threads",
-    subtitle: "Downloader Threads",
-    description: "Unduh gambar & video dari post Threads (meta threads.net).",
-    color: "#374151",
-    icon: "AtSign",
-    placeholder: "https://www.threads.net/@username/post/xxxxx",
-    defaultEngine: "threadster",
-    engines: [{ key: "threadster", label: "Threadster" }],
+    desc: "Video & gambar dari Threads.",
+    icon: "at-sign",
+    color: "#0f172a",
+    engines: [
+      { slug: "threadster", name: "threadster", desc: "Server Threadster — media Threads" },
+    ],
   },
   {
     slug: "reddl",
-    libKey: "reddit",
+    dir: "reddit",
     label: "Reddit",
-    subtitle: "Downloader Reddit",
-    description: "Unduh video, gambar, dan media dari post Reddit.",
-    color: "#ea580c",
-    icon: "MessagesSquare",
-    placeholder: "https://www.reddit.com/r/sub/comments/xxxxx",
-    defaultEngine: "rapidsave",
-    engines: [{ key: "rapidsave", label: "RapidSave" }],
+    desc: "Video & gambar Reddit (RapidSave).",
+    icon: "message-square",
+    color: "#ff4500",
+    engines: [
+      { slug: "rapidsave", name: "rapidsave", desc: "Server RapidSave — video + audio Reddit" },
+    ],
   },
   {
     slug: "teraboxdl",
-    libKey: "terabox",
+    dir: "terabox",
     label: "Terabox",
-    subtitle: "Downloader Terabox",
-    description: "Ambil direct link file dari share link Terabox.",
-    color: "#0891b2",
-    icon: "CloudDownload",
-    placeholder: "https://1024terabox.com/s/xxxxx",
-    defaultEngine: "sechno",
-    engines: [{ key: "sechno", label: "Sechno" }],
+    desc: "Unduh file langsung dari Terabox.",
+    icon: "hard-drive",
+    color: "#0ea5e9",
+    engines: [
+      { slug: "sechno", name: "sechno", desc: "Server Sechno — direct link Terabox" },
+    ],
   },
   {
     slug: "scdl",
-    libKey: "soundcloud",
+    dir: "soundcloud",
     label: "SoundCloud",
-    subtitle: "Downloader SoundCloud",
-    description: "Unduh lagu/audio dari SoundCloud menjadi file MP3.",
-    color: "#f97316",
-    icon: "AudioWaveform",
-    placeholder: "https://soundcloud.com/artist/lagu",
-    defaultEngine: "klickaud",
-    engines: [{ key: "klickaud", label: "KlickAud" }],
+    desc: "Audio MP3 dari SoundCloud.",
+    icon: "cloud",
+    color: "#ff5500",
+    engines: [
+      { slug: "klickaud", name: "klickaud", desc: "Server KlickAud — MP3 128kbps" },
+    ],
   },
   {
     slug: "douyindl",
-    libKey: "douyin",
+    dir: "douyin",
     label: "Douyin",
-    subtitle: "Downloader Douyin",
-    description: "Unduh video Douyin (TikTok China) tanpa watermark.",
-    color: "#06b6d4",
-    icon: "Video",
-    placeholder: "https://v.douyin.com/xxxxx",
-    defaultEngine: "direct",
-    engines: [{ key: "direct", label: "Direct" }],
+    desc: "Video & gambar Douyin tanpa watermark.",
+    icon: "music-3",
+    color: "#22c55e",
+    engines: [
+      { slug: "direct", name: "direct", desc: "Ekstraksi langsung — video, foto & musik" },
+    ],
   },
   {
     slug: "pixivdl",
-    libKey: "pixiv",
+    dir: "pixiv",
     label: "Pixiv",
-    subtitle: "Downloader Pixiv",
-    description:
-      "Unduh artwork/single image atau semua gambar dalam satu post manga Pixiv.",
-    color: "#0284c7",
-    icon: "Brush",
-    placeholder: "https://www.pixiv.net/en/artworks/xxxxx",
-    defaultEngine: "ajax",
-    engines: [{ key: "ajax", label: "Pixiv Ajax" }],
+    desc: "Ilustrasi, manga & ugoira Pixiv.",
+    icon: "palette",
+    color: "#0096fa",
+    engines: [
+      { slug: "ajax", name: "ajax", desc: "Ekstraksi via API Ajax Pixiv" },
+    ],
   },
   {
     slug: "spdl",
-    libKey: "spotify",
+    dir: "spotify",
     label: "Spotify",
-    subtitle: "Downloader Spotify",
-    description:
-      "Unduh lagu Spotify (MP3 320kbps) dari link track, album, atau playlist.",
-    color: "#16a34a",
-    icon: "Disc3",
-    placeholder: "https://open.spotify.com/track/xxxxx",
-    defaultEngine: "spotidown",
+    desc: "Track & playlist Spotify menjadi MP3.",
+    icon: "audio-lines",
+    color: "#1db954",
     engines: [
-      { key: "spotidown", label: "SpotiDown" },
-      { key: "spotmate", label: "SpotMate" },
-      { key: "soundloaders", label: "SoundLoaders" },
-      { key: "spotisaver", label: "Spotisaver" },
+      { slug: "spotidown", name: "spotidown", desc: "Server SpotiDown — MP3 per track" },
+      { slug: "spotmate", name: "spotmate", desc: "Server SpotMate — track & playlist" },
+      { slug: "soundloaders", name: "soundloaders", desc: "Server SoundLoaders — MP3" },
+      { slug: "spotisaver", name: "spotisaver", desc: "Server Spotisaver — MP3" },
     ],
   },
   {
     slug: "animedl",
-    libKey: "anime",
+    dir: "anime",
     label: "Anime",
-    subtitle: "Downloader Anime",
-    description:
-      "Ambil link download episode anime dari Otakudesu, Nimegami, Gogoanime, dan Animetosho. Bisa pakai URL series — episode terakhir otomatis dipilih.",
+    desc: "Episode & batch anime dari situs streaming favorit.",
+    icon: "play",
     color: "#a855f7",
-    icon: "Tv",
-    placeholder: "https://otakudesu.blog/anime/xxx/episode-xxx/",
-    defaultEngine: "otakudesu",
     engines: [
-      { key: "otakudesu", label: "Otakudesu" },
-      { key: "nimegami", label: "Nimegami" },
-      { key: "gogoanime", label: "Gogoanime" },
-      { key: "animetosho", label: "Animetosho" },
+      { slug: "otakudesu", name: "otakudesu", desc: "OtakuDesu — episode & download link" },
+      { slug: "nimegami", name: "nimegami", desc: "NimeGami — episode multi-server" },
+      { slug: "gogoanime", name: "gogoanime", desc: "GogoAnime — episode multi-kualitas" },
+      { slug: "animetosho", name: "animetosho", desc: "AnimeTosho — episode / batch torrent & magnet" },
     ],
   },
   {
     slug: "komikdl",
-    libKey: "comic",
+    dir: "comic",
     label: "Komik",
-    subtitle: "Downloader Komik",
-    description:
-      "Unduh semua halaman gambar dari satu chapter komik. Bisa pakai URL series — chapter terakhir otomatis dipilih.",
+    desc: "Chapter komik, manga & manhwa per halaman gambar.",
+    icon: "book-open",
     color: "#f59e0b",
-    icon: "BookOpen",
-    placeholder: "https://komikcast.info/manga-xxx/chapter-xxx/",
-    defaultEngine: "komikcast",
     engines: [
-      { key: "komikcast", label: "KomikCast" },
-      { key: "kiryuu", label: "Kiryuu" },
-      { key: "komiku", label: "Komiku" },
-      { key: "mangadex", label: "MangaDex" },
-      { key: "komikindo", label: "Komikindo" },
-      { key: "bacakomik", label: "BacaKomik" },
-      { key: "manhwaindo", label: "ManhuaIndo" },
-      { key: "asurascans", label: "Asura Scans" },
-      { key: "mangabats", label: "Mangabats" },
+      { slug: "komikcast", name: "komikcast", desc: "KomikCast — chapter per gambar" },
+      { slug: "kiryuu", name: "kiryuu", desc: "Kiryuu — chapter per gambar" },
+      { slug: "komiku", name: "komiku", desc: "Komiku — chapter per gambar" },
+      { slug: "mangadex", name: "mangadex", desc: "MangaDex — chapter via API resmi" },
+      { slug: "komikindo", name: "komikindo", desc: "KomikIndo — chapter per gambar" },
+      { slug: "bacakomik", name: "bacakomik", desc: "BacaKomik — chapter per gambar" },
+      { slug: "manhwaindo", name: "manhwaindo", desc: "ManhwaIndo — chapter per gambar" },
+      { slug: "asurascans", name: "asurascans", desc: "AsuraScans — chapter per gambar" },
+      { slug: "mangabats", name: "mangabats", desc: "MangaBats — chapter per gambar" },
     ],
   },
   {
     slug: "resolver",
-    libKey: "resolver",
+    dir: "resolver",
     label: "Resolver Link",
-    subtitle: "Direct link & unshortener",
-    description:
-      "Ubah link jadi direct link: Sfile, Mediafire, Google Drive, Pixeldrain, Catbox, Doodstream, dan lainnya. Bisa juga membuka safelink & shortlink.",
-    color: "#8b5cf6",
-    icon: "Link2",
-    placeholder: "https://sfile.mobi/xxxxx",
-    defaultEngine: "sfile",
+    desc: "Bypass shortlink & dapatkan direct link asli.",
+    icon: "link-2",
+    color: "#6b7280",
     engines: [
-      { key: "sfile", label: "Sfile" },
-      { key: "mediafire", label: "MediaFire" },
-      { key: "safelinku", label: "SafelinkU" },
-      { key: "pixeldrain", label: "Pixeldrain" },
-      { key: "catbox", label: "Catbox" },
-      { key: "krakenfiles", label: "Krakenfiles" },
-      { key: "doodstream", label: "Doodstream" },
-      { key: "gdrive", label: "Google Drive" },
-      { key: "sub2unlock", label: "Sub2Unlock" },
-      { key: "rekonise", label: "Rekonise" },
-      { key: "unshorten", label: "Unshorten" },
+      { slug: "sfile", name: "sfile", desc: "Direct link Sfile.mobi" },
+      { slug: "mediafire", name: "mediafire", desc: "Direct link MediaFire" },
+      { slug: "safelinku", name: "safelinku", desc: "Bypass SafelinkU" },
+      { slug: "pixeldrain", name: "pixeldrain", desc: "Direct link Pixeldrain" },
+      { slug: "catbox", name: "catbox", desc: "Direct link Catbox" },
+      { slug: "krakenfiles", name: "krakenfiles", desc: "Direct link KrakenFiles" },
+      { slug: "doodstream", name: "doodstream", desc: "Direct link DoodStream" },
+      { slug: "gdrive", name: "gdrive", desc: "Direct link Google Drive" },
+      { slug: "sub2unlock", name: "sub2unlock", desc: "Bypass Sub2Unlock" },
+      { slug: "rekonise", name: "rekonise", desc: "Bypass Rekonise" },
+      { slug: "unshorten", name: "unshorten", desc: "Unshorten URL apa pun (follow redirect)" },
     ],
   },
 ];
 
-export function getCategory(slug: string): CategoryDef | undefined {
-  return categories.find((c) => c.slug === slug);
+export const totalEngineCount = scraprCategories.reduce(
+  (acc, cat) => acc + cat.engines.length,
+  0
+);
+
+/** Cari kategori berdasarkan slug situs (mis. "igdl") */
+export function findCategory(slug: string): ScraprCategory | undefined {
+  return scraprCategories.find((c) => c.slug === slug);
 }
 
-export function getEngine(
-  cat: CategoryDef,
-  key: string
-): EngineDef | undefined {
-  return cat.engines.find((e) => e.key === key);
-}
-
-export function categoryByLib(libKey: string): CategoryDef | undefined {
-  return categories.find((c) => c.libKey === libKey);
+/** Cari engine dalam sebuah kategori */
+export function findEngine(
+  categorySlug: string,
+  engineSlug: string
+): { category: ScraprCategory; engine: ScraprEngine } | undefined {
+  const category = findCategory(categorySlug);
+  if (!category) return undefined;
+  const engine = category.engines.find((e) => e.slug === engineSlug);
+  if (!engine) return undefined;
+  return { category, engine };
 }

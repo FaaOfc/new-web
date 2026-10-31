@@ -5,145 +5,151 @@ import {
   Apple,
   Terminal,
   Download,
-  CheckCircle2,
-  PackageOpen,
-  Clock,
+  Package,
+  RefreshCw,
+  Info,
 } from "lucide-react";
-import { appDownloads, appInfo, type AppDownload } from "@/lib/appConfig";
+import { appInfo, appDownloads } from "@/lib/appConfig";
 
 export const metadata: Metadata = {
   title: "Unduh Versi Aplikasi — TaoSite",
   description:
-    "Unduh aplikasi TaoSite untuk Android, Windows, macOS, dan Linux.",
+    "Unduh aplikasi TaoSite untuk Android, Windows, dan iOS. Downloader, CDN, dan short URL dalam satu aplikasi.",
 };
 
-const iconMap = {
+const ICONS = {
   smartphone: Smartphone,
   monitor: Monitor,
   apple: Apple,
   terminal: Terminal,
-};
+} as const;
 
-function DownloadCard({ app }: { app: AppDownload }) {
-  const Icon = iconMap[app.icon] || Smartphone;
-  const available = !!app.url && app.url !== "#";
-
-  return (
-    <div className="neo-card p-5 sm:p-6 flex flex-col animate-slide-up">
-      {/* Header */}
-      <div className="flex items-start justify-between mb-4">
-        <div
-          className="neo-border rounded-xl p-3"
-          style={{ backgroundColor: "#f9731618" }}
-        >
-          <Icon className="size-6 text-orange-500" />
-        </div>
-        {app.featured && (
-          <span className="text-[10px] px-2.5 py-1 rounded-full font-mono font-bold neo-border bg-orange-500 text-white">
-            Rekomendasi
-          </span>
-        )}
-      </div>
-
-      {/* Title + version */}
-      <h3 className="font-mono font-bold text-lg">{app.platform}</h3>
-      <div className="flex flex-wrap gap-1.5 mt-2 mb-3">
-        <span className="text-[10px] px-2 py-0.5 rounded-full font-mono neo-border bg-[var(--neo-page-bg)]">
-          v{app.version}
-        </span>
-        <span className="text-[10px] px-2 py-0.5 rounded-full font-mono neo-border bg-[var(--neo-page-bg)]">
-          {app.size}
-        </span>
-        <span className="text-[10px] px-2 py-0.5 rounded-full font-mono neo-border bg-[var(--neo-page-bg)]">
-          {app.requirements}
-        </span>
-      </div>
-
-      {app.note && (
-        <p className="font-mono text-xs mb-4" style={{ color: "var(--neo-muted-text)" }}>
-          {app.note}
-        </p>
-      )}
-
-      {/* Action */}
-      <div className="mt-auto">
-        {available ? (
-          <a
-            href={app.url}
-            className="neo-btn w-full py-3 px-4 font-mono font-bold text-sm flex items-center justify-center gap-2 bg-orange-500 text-white border-orange-600 hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-[5px_5px_0px_var(--neo-shadow-color)] transition-all"
-          >
-            <Download className="size-4" />
-            Unduh untuk {app.platform}
-          </a>
-        ) : (
-          <div className="w-full py-3 px-4 font-mono font-bold text-sm flex items-center justify-center gap-2 neo-border rounded-md bg-[var(--neo-page-bg)] opacity-70 cursor-not-allowed">
-            <Clock className="size-4" />
-            Belum Tersedia
-          </div>
-        )}
-      </div>
-    </div>
-  );
+function isAvailable(url: string) {
+  return typeof url === "string" && url.trim() !== "" && url.trim() !== "#";
 }
 
 export default function DownloadsPage() {
+  const anyAvailable =
+    appDownloads.some((d) => isAvailable(d.url)) || isAvailable(appInfo.primaryUrl);
+
   return (
-    <div className="min-h-[calc(100vh-3.5rem)] py-8 sm:py-14 px-4">
-      <div className="max-w-4xl mx-auto">
-        {/* Header */}
-        <div className="text-center mb-10">
-          <div className="inline-flex items-center justify-center neo-border rounded-xl p-3 bg-orange-50 dark:bg-orange-950 mb-4">
-            <PackageOpen className="size-8 text-orange-500" />
-          </div>
-          <h1 className="text-2xl sm:text-3xl font-mono font-bold mb-2">
-            Unduh Versi Aplikasi
-          </h1>
-          <p
-            className="text-sm font-mono max-w-md mx-auto"
-            style={{ color: "var(--neo-muted-text)" }}
-          >
-            {appInfo.tagline}
+    <div className="max-w-2xl mx-auto px-4 py-8 sm:py-12 w-full">
+      {/* Header */}
+      <div className="text-center mb-10">
+        <div className="inline-flex items-center justify-center neo-border rounded-xl p-4 bg-orange-50 dark:bg-orange-950 mb-4">
+          <Package className="size-8 text-orange-500" />
+        </div>
+        <h1 className="text-2xl sm:text-3xl font-mono font-bold mb-2">
+          Unduh Versi Aplikasi
+        </h1>
+        <p className="font-mono text-sm" style={{ color: "var(--neo-muted-text)" }}>
+          {appInfo.tagline}
+        </p>
+        <div
+          className="inline-flex items-center gap-2 neo-btn px-3 py-1.5 mt-4 font-mono text-xs"
+          style={{ color: "var(--neo-muted-text)" }}
+        >
+          <RefreshCw className="size-3.5" />
+          Versi terbaru: v{appInfo.latestVersion} &middot; update {appInfo.lastUpdated}
+        </div>
+      </div>
+
+      {/* Tombol unduh utama */}
+      {anyAvailable ? (
+        <div className="neo-card p-6 sm:p-8 mb-8 text-center bg-orange-50 dark:bg-orange-950/40">
+          <h2 className="font-mono font-bold text-lg mb-1">{appInfo.appName}</h2>
+          <p className="font-mono text-xs mb-5" style={{ color: "var(--neo-muted-text)" }}>
+            Unduhan cepat — rekomendasi untuk platform kamu
           </p>
-          <div className="inline-flex items-center gap-2 neo-btn px-4 py-1.5 bg-[var(--neo-card-bg)] text-sm font-mono mt-4">
-            <CheckCircle2 className="size-4 text-green-500" />
-            Versi terbaru: v{appInfo.latestVersion}
+          <a
+            href={appInfo.primaryUrl}
+            className="neo-btn inline-flex items-center gap-2 px-6 py-3 font-mono font-bold text-sm bg-orange-500 text-white hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-[5px_5px_0px_var(--neo-shadow-color)] transition-all"
+          >
+            <Download className="size-4" />
+            Unduh Sekarang
+          </a>
+        </div>
+      ) : (
+        <div
+          className="neo-card p-6 sm:p-8 mb-8 text-center"
+          style={{ backgroundColor: "var(--neo-page-bg)" }}
+        >
+          <div className="inline-flex items-center justify-center neo-border rounded-xl p-3 mb-3 bg-[var(--neo-card-bg)]">
+            <Info className="size-6 text-orange-500" />
           </div>
-        </div>
-
-        {/* Download grid */}
-        <div className="grid sm:grid-cols-2 gap-4 mb-10">
-          {appDownloads.map((app) => (
-            <DownloadCard key={app.id} app={app} />
-          ))}
-        </div>
-
-        {/* Info box */}
-        <div className="neo-card p-5">
-          <h4 className="font-mono font-bold text-sm mb-2 flex items-center gap-2">
-            <Terminal className="size-4 text-orange-500" />
-            Catatan Instalasi
-          </h4>
-          <ul
-            className="font-mono text-xs space-y-1.5 leading-relaxed list-disc pl-4"
+          <h2 className="font-mono font-bold text-base mb-1">Segera Hadir</h2>
+          <p
+            className="font-mono text-xs max-w-sm mx-auto leading-relaxed"
             style={{ color: "var(--neo-muted-text)" }}
           >
-            <li>
-              Android: file APK diunduh langsung — aktifkan &quot;Instal aplikasi
-              dari sumber tidak dikenal&quot; saat pertama kali memasang.
-            </li>
-            <li>
-              Windows: jika muncul peringatan SmartScreen, pilih
-              &quot;More info&quot; → &quot;Run anyway&quot;.
-            </li>
-            <li>
-              Link unduhan aplikasi dikelola lewat file{" "}
-              <code className="px-1 py-0.5 neo-border rounded bg-[var(--neo-page-bg)]">
-                src/lib/appConfig.ts
-              </code>
-              .
-            </li>
-          </ul>
+            Versi aplikasi sedang dalam tahap finalisasi. Pantau halaman ini — link
+            unduhan akan muncul di sini begitu rilis.
+          </p>
         </div>
+      )}
+
+      {/* Kartu per platform */}
+      <div className="space-y-3">
+        {appDownloads.map((app) => {
+          const Icon = ICONS[app.icon] ?? Smartphone;
+          const available = isAvailable(app.url);
+          return (
+            <div key={app.id} className="neo-card p-4 sm:p-5">
+              <div className="flex items-center gap-4">
+                <div
+                  className="neo-border rounded-lg p-3 shrink-0"
+                  style={{ backgroundColor: "#f9731615" }}
+                >
+                  <Icon className="size-6 text-orange-500" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <h3 className="font-mono font-bold text-sm">{app.platform}</h3>
+                    {app.featured && (
+                      <span className="text-[9px] font-mono font-bold px-1.5 py-0.5 rounded bg-orange-500 text-white">
+                        REKOMENDASI
+                      </span>
+                    )}
+                  </div>
+                  <p className="font-mono text-xs mt-0.5" style={{ color: "var(--neo-muted-text)" }}>
+                    v{app.version} &middot; {app.size} &middot; {app.requirements}
+                  </p>
+                  {app.note && (
+                    <p className="font-mono text-[10px] mt-1" style={{ color: "var(--neo-muted-text)" }}>
+                      {app.note}
+                    </p>
+                  )}
+                </div>
+                {available ? (
+                  <a
+                    href={app.url}
+                    className="neo-btn shrink-0 inline-flex items-center gap-1.5 px-4 py-2 font-mono font-bold text-xs bg-[#18181b] text-white hover:opacity-80"
+                  >
+                    <Download className="size-3.5" />
+                    Unduh
+                  </a>
+                ) : (
+                  <span
+                    className="neo-btn shrink-0 inline-flex items-center gap-1.5 px-4 py-2 font-mono font-bold text-xs opacity-50 cursor-not-allowed select-none"
+                    style={{ color: "var(--neo-muted-text)" }}
+                    aria-disabled
+                  >
+                    Belum tersedia
+                  </span>
+                )}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      {/* Catatan keamanan */}
+      <div className="neo-card p-4 mt-8">
+        <p className="font-mono text-xs leading-relaxed" style={{ color: "var(--neo-muted-text)" }}>
+          <strong className="text-orange-500">Tips keamanan:</strong> unduh aplikasi
+          hanya dari halaman ini. Jika unduhan tidak dimulai otomatis, klik kanan
+          tombol unduh lalu pilih &quot;Save link as&quot;.
+        </p>
       </div>
     </div>
   );

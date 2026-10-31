@@ -82,10 +82,11 @@ export default function AboutPage() {
           seharusnya bisa diakses oleh siapa saja tanpa syarat.
         </p>
         <p className="text-sm leading-relaxed mb-3" style={{ color: "var(--neo-muted-text)" }}>
-          Dengan memanfaatkan Server sebagai backend (untuk file hosting, dan untuk database),
-          dan library scraper scrapr untuk fitur downloader, kami berhasil membangun sebuah platform yang
-          sepenuhnya beroperasi tanpa biaya server. Tidak ada database berbayar, tidak ada cloud storage,
-          dan tidak ada subscription hanya kode yang efisien dan infrastruktur cerdas.
+          Dengan memanfaatkan GitHub sebagai backend (untuk file hosting dan database short URL),
+          dan engine scraper @coflyn/scrapr untuk 54 downloader multi-platform, kami berhasil membangun
+          sebuah platform yang sepenuhnya beroperasi tanpa biaya server. Tidak ada database berbayar,
+          tidak ada cloud storage, dan tidak ada subscription — hanya kode yang efisien dan
+          infrastruktur cerdas.
         </p>
         <p className="text-sm leading-relaxed" style={{ color: "var(--neo-muted-text)" }}>
           Desain Neobrutalism yang kami gunakan bukan hanya estetika ini adalah pernyataan bahwa

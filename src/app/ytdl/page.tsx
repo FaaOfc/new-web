@@ -1,17 +1,27 @@
 import type { Metadata } from "next";
-import { notFound } from "next/navigation";
-import { getCategory, getEngine } from "@/lib/scraper-registry";
-import DownloaderPage from "@/components/downloader/downloader-page";
+import CategoryView from "@/components/downloader/category-view";
+import { findCategory } from "@/lib/scraper-registry";
 
-const cat = getCategory("ytdl");
-if (!cat) notFound();
-const engine = getEngine(cat, cat.defaultEngine)!;
-
-export const metadata: Metadata = {
-  title: "YouTube Downloader — TaoSite",
-  description: cat.description,
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const cat = findCategory("ytdl")!;
+  return {
+    title: `${cat.label} Downloader — TaoSite`,
+    description: cat.desc,
+  };
+}
 
 export default function Page() {
-  return <DownloaderPage category={cat} activeEngine={engine} />;
+  const cat = findCategory("ytdl")!;
+  return (
+    <div className="min-h-[calc(100vh-3.5rem)] flex items-start justify-center">
+      <CategoryView
+        categorySlug={cat.slug}
+        categoryLabel={cat.label}
+        categoryDesc={cat.desc}
+        color={cat.color}
+        iconName={cat.icon}
+        engines={cat.engines.map((e) => ({ slug: e.slug, desc: e.desc }))}
+      />
+    </div>
+  );
 }
